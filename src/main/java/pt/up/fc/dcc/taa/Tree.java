@@ -18,6 +18,6 @@ public interface Tree<T extends Comparable<T>> {
     
     public boolean remove(T t);
     
-    public void printContents();
+    public void print();
     
 }
