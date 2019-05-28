@@ -17,6 +17,7 @@ public class TreapNode implements Tree<KPPair> {
     private TreapNode right = null;
     private TreapNode parent = null;
     private KPPair kp;
+    private int height = 1;
 
     public TreapNode(KPPair kp) {
         this.kp = kp;
@@ -66,6 +67,14 @@ public class TreapNode implements Tree<KPPair> {
         this.kp = kp;
     }
 
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
     @Override
     public int hashCode() {
         int hash = 5;
@@ -102,6 +111,22 @@ public class TreapNode implements Tree<KPPair> {
         }
         return true;
     }
+    
+    private void updateHeightGlobal() {
+        TreapNode x = this;
+        while (x.getParent() != null) {
+            x = x.getParent();
+        }
+        updateHeight(x);
+    }
+
+    private int updateHeight(TreapNode n) {
+        if (n == null) {
+            return 0;
+        }
+        n.setHeight(1 + Math.max(updateHeight(getLeft()), updateHeight(getRight())));
+        return getHeight();
+    }
 
     @Override
     public void insert(KPPair kpp) {
@@ -123,6 +148,7 @@ public class TreapNode implements Tree<KPPair> {
         }
         if (inserted) {
             balance();
+            updateHeightGlobal();
         }
     }
 
@@ -161,7 +187,7 @@ public class TreapNode implements Tree<KPPair> {
         y.getRight().setParent(y);
         setLeft(y);
     }
-    
+
     @Override
     public KPPair search(KPPair kpp) {
         switch (kpp.compareTo(getKp())) {
@@ -176,13 +202,11 @@ public class TreapNode implements Tree<KPPair> {
         }
     }
 
-    
     @Override
     public void print() {
         System.out.print("Not implemented for this tree");
     }
 
-    /*
     public void fill(String[] output, int stage) {
         if (left != null) {
             left.fill(output, stage + 1);
@@ -206,9 +230,7 @@ public class TreapNode implements Tree<KPPair> {
         }
         return builder.toString();
     }
-    * 
-    */
-
+    
     @Override
     public boolean remove(KPPair t) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
