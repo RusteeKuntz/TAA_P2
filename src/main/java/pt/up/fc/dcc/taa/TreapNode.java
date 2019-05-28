@@ -69,10 +69,10 @@ public class TreapNode implements Tree<KPPair> {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 67 * hash + Objects.hashCode(this.left);
-        hash = 67 * hash + Objects.hashCode(this.right);
-        hash = 67 * hash + Objects.hashCode(this.parent);
-        hash = 67 * hash + Objects.hashCode(this.kp);
+        hash = 67 * hash + Objects.hashCode(this.getLeft());
+        hash = 67 * hash + Objects.hashCode(this.getRight());
+        hash = 67 * hash + Objects.hashCode(this.getParent());
+        hash = 67 * hash + Objects.hashCode(this.getKp());
         return hash;
     }
 
@@ -106,19 +106,19 @@ public class TreapNode implements Tree<KPPair> {
     @Override
     public void insert(KPPair kpp) {
         boolean inserted = false;
-        if (kpp.compareTo(kp) < 1) {
-            if (left == null) {
-                left = new TreapNode(kpp, this);
+        if (kpp.compareTo(getKp()) < 1) {
+            if (getLeft() == null) {
+                setLeft(new TreapNode(kpp, this));
                 inserted = true;
             } else {
-                left.insert(kpp);
+                getLeft().insert(kpp);
             }
         } else {
-            if (right == null) {
-                right = new TreapNode(kpp, this);
+            if (getRight() == null) {
+                setRight(new TreapNode(kpp, this));
                 inserted = true;
             } else {
-                right.insert(kpp);
+                getRight().insert(kpp);
             }
         }
         if (inserted) {
@@ -127,8 +127,8 @@ public class TreapNode implements Tree<KPPair> {
     }
 
     private void balance() {
-        while (parent != null && kp.comparePriority(parent.getKp()) < 0) {
-            if (this.equals(parent.getLeft())) {
+        while (getParent() != null && getKp().comparePriority(getParent().getKp()) < 0) {
+            if (this.equals(getParent().getLeft())) {
                 rotateRight();
             } else {
                 rotateLeft();
@@ -137,40 +137,40 @@ public class TreapNode implements Tree<KPPair> {
     }
 
     private void rotateRight() {
-        TreapNode y = parent;
+        TreapNode y = getParent();
         if (y.getParent() != null && y.equals(y.getParent().getLeft())) {
             y.getParent().setLeft(this);
         } else {
             y.getParent().setRight(this);
         }
-        parent = y.getParent();
-        y.setLeft(right);
+        setParent(y.getParent());
+        y.setLeft(getRight());
         y.getLeft().setParent(y);
-        right = y;
+        setRight(y);
     }
 
     private void rotateLeft() {
-        TreapNode y = parent;
+        TreapNode y = getParent();
         if (y.getParent() != null && y.equals(y.getParent().getLeft())) {
             y.getParent().setLeft(this);
         } else {
             y.getParent().setRight(this);
         }
-        parent = y.getParent();
-        y.setRight(left);
+        setParent(y.getParent());
+        y.setRight(getLeft());
         y.getRight().setParent(y);
-        left = y;
+        setLeft(y);
     }
     
     @Override
     public KPPair search(KPPair kpp) {
-        switch (kpp.compareTo(kp)) {
+        switch (kpp.compareTo(getKp())) {
             case 0:
-                return kp;
+                return getKp();
             case -1:
-                return left == null ? null : left.search(kpp);
+                return getLeft() == null ? null : getLeft().search(kpp);
             case 1:
-                return right == null ? null : left.search(kpp);
+                return getRight() == null ? null : getLeft().search(kpp);
             default:
                 return null;
         }
