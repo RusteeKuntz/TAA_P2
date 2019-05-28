@@ -6,19 +6,9 @@
 package pt.up.fc.dcc.taa;
 
 /**
- * TODO fix print(), add MIN/MAX
  *
  * @author Ayy lmao
- * @param <T>
  */
-public interface Tree<T extends Comparable<T>> {
-    
-    public T search(T t);
-    
-    public void insert(T t);
-    
-    public boolean remove(T t);
-    
-    public void print();
-    
+public enum Operation {
+    INSERT, SEARCH, RANDOM, SEED, RANGE
 }
