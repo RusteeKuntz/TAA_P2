@@ -5,7 +5,7 @@ public class RedBlackNode implements Tree<Integer> {
     private RedBlackNode left = null;
     private RedBlackNode right = null;
     private RedBlackNode parent = null;
-    private int value;
+    private Integer value;
     private int height;
     private boolean red;
 
@@ -14,7 +14,7 @@ public class RedBlackNode implements Tree<Integer> {
      *
      * @param value The value of the root
      */
-    public RedBlackNode(int value) {
+    public RedBlackNode(Integer value) {
         this.value = value;
         red = false;
         height = 1;
@@ -23,7 +23,8 @@ public class RedBlackNode implements Tree<Integer> {
     /**
      * Private constructor Used in rotations
      */
-    private RedBlackNode(RedBlackNode left, RedBlackNode right, RedBlackNode parent, int value, boolean red) {
+    private RedBlackNode(RedBlackNode left, RedBlackNode right, RedBlackNode parent,
+            Integer value, boolean red) {
         this.left = left;
         this.right = right;
         this.parent = parent;
@@ -43,7 +44,7 @@ public class RedBlackNode implements Tree<Integer> {
      * @param value The value of the inserted node
      * @param parent The parent of the inserted node
      */
-    private RedBlackNode(int value, RedBlackNode parent) {
+    private RedBlackNode(Integer value, RedBlackNode parent) {
         this.parent = parent;
         this.value = value;
         red = true;
