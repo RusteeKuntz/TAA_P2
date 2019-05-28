@@ -11,8 +11,8 @@ package pt.up.fc.dcc.taa;
  */
 public class KPPair implements Comparable<KPPair> {
     
-    int key;
-    int priority;
+    private int key;
+    private int priority;
 
     public KPPair(int key, int priority) {
         this.key = key;

@@ -1,33 +1,34 @@
 package pt.up.fc.dcc.taa;
 
-public class Avl implements Tree<Integer> {
+public class AvlNode implements Tree<Integer> {
 
-    protected Avl left;
-    protected Avl right;
-    protected Avl parent;
-    protected Integer value;
+    private AvlNode left = null;
+    private AvlNode right = null;
+    private AvlNode parent = null;
+    private Integer value;
+    private int height = 1;
 
-    public Avl getLeft() {
+    public AvlNode getLeft() {
         return left;
     }
 
-    public void setLeft(Avl left) {
+    public void setLeft(AvlNode left) {
         this.left = left;
     }
 
-    public Avl getRight() {
+    public AvlNode getRight() {
         return right;
     }
 
-    public void setRight(Avl right) {
+    public void setRight(AvlNode right) {
         this.right = right;
     }
 
-    public Avl getParent() {
+    public AvlNode getParent() {
         return parent;
     }
 
-    public void setParent(Avl parent) {
+    public void setParent(AvlNode parent) {
         this.parent = parent;
     }
 
@@ -46,25 +47,20 @@ public class Avl implements Tree<Integer> {
     public void setHeight(int height) {
         this.height = height;
     }
-    protected int height;
 
     /**
      * Public constructor Constructor used to build a tree
      *
      * @param value The value of the root
      */
-    public Avl(Integer value) {
-        left = null;
-        right = null;
-        parent = null;
+    public AvlNode(Integer value) {
         this.value = value;
-        height = 1;
     }
 
     /**
      * Private constructor Used in rotations
      */
-    private Avl(Avl left, Avl right, Avl parent, Integer value) {
+    private AvlNode(AvlNode left, AvlNode right, AvlNode parent, Integer value) {
         this.left = left;
         if (this.left != null) {
             this.left.setParent(this);
@@ -84,9 +80,7 @@ public class Avl implements Tree<Integer> {
      * @param value The value of the inserted node
      * @param parent The parent of the inserted node
      */
-    private Avl(int value, Avl parent) {
-        left = null;
-        right = null;
+    private AvlNode(Integer value, AvlNode parent) {
         this.parent = parent;
         this.value = value;
         height = 1;
@@ -118,14 +112,14 @@ public class Avl implements Tree<Integer> {
         boolean inserted = false;
         if (a.compareTo(value) < 1) {
             if (left == null) {
-                left = new Avl(a, this);
+                left = new AvlNode(a, this);
                 inserted = true;
             } else {
                 left.insert(a);
             }
         } else {
             if (right == null) {
-                right = new Avl(a, this);
+                right = new AvlNode(a, this);
                 inserted = true;
             } else {
                 right.insert(a);
@@ -199,7 +193,7 @@ public class Avl implements Tree<Integer> {
 
     //Rotations
     public void rotateLeftRight() {
-        Avl x = new Avl(left.getRight(), right, this, value);
+        AvlNode x = new AvlNode(left.getRight(), right, this, value);
         this.value = left.getValue();
         this.left = left.getLeft();
         this.left.setParent(this);
@@ -208,7 +202,7 @@ public class Avl implements Tree<Integer> {
     }
 
     public void rotateRightLeft() {
-        Avl x = new Avl(left, right.getLeft(), this, value);
+        AvlNode x = new AvlNode(left, right.getLeft(), this, value);
         this.value = right.getValue();
         this.right = right.getRight();
         this.right.setParent(this);
@@ -217,8 +211,8 @@ public class Avl implements Tree<Integer> {
     }
 
     public void rotateLeftLeft() {
-        Avl x = new Avl(left.getRight().getRight(), right, this, value);
-        Avl y = new Avl(left.getLeft(), left.getRight().getLeft(), this, left.getValue());
+        AvlNode x = new AvlNode(left.getRight().getRight(), right, this, value);
+        AvlNode y = new AvlNode(left.getLeft(), left.getRight().getLeft(), this, left.getValue());
         this.value = left.getRight().getValue();
         this.left = y;
         this.right = x;
@@ -226,8 +220,8 @@ public class Avl implements Tree<Integer> {
     }
 
     public void rotateRightRight() {
-        Avl x = new Avl(left, right.getLeft().getLeft(), this, value);
-        Avl y = new Avl(right.getLeft().getRight(), right.getRight(), this, right.getValue());
+        AvlNode x = new AvlNode(left, right.getLeft().getLeft(), this, value);
+        AvlNode y = new AvlNode(right.getLeft().getRight(), right.getRight(), this, right.getValue());
         this.value = right.getLeft().getValue();
         this.left = x;
         this.right = y;
@@ -272,7 +266,7 @@ public class Avl implements Tree<Integer> {
     }
 
     public static void main(String[] args) {
-        Avl test = new Avl(15);
+        AvlNode test = new AvlNode(15);
         test.insert(5);
         test.insert(25);
         test.insert(30);
