@@ -1,23 +1,20 @@
 package pt.up.fc.dcc.taa;
 
-public class Redblack {
+public class RedBlackNode implements Tree<Integer> {
 
-    protected Redblack left;
-    protected Redblack right;
-    protected Redblack parent;
-    protected int value;
-    protected int height;
-    protected boolean red;
+    private RedBlackNode left = null;
+    private RedBlackNode right = null;
+    private RedBlackNode parent = null;
+    private int value;
+    private int height;
+    private boolean red;
 
     /**
      * Public constructor Constructor used to build a tree
      *
      * @param value The value of the root
      */
-    public Redblack(int value) {
-        left = null;
-        right = null;
-        parent = null;
+    public RedBlackNode(int value) {
         this.value = value;
         red = false;
         height = 1;
@@ -26,16 +23,17 @@ public class Redblack {
     /**
      * Private constructor Used in rotations
      */
-    private Redblack(Redblack left, Redblack right, Redblack parent, int value, boolean red) {
+    private RedBlackNode(RedBlackNode left, RedBlackNode right, RedBlackNode parent, int value, boolean red) {
         this.left = left;
+        this.right = right;
         this.parent = parent;
         this.value = value;
         this.red = red;
         if (this.left != null) {
-            this.left.parent = this;
+            this.left.setParent(this);
         }
         if (this.right != null) {
-            this.right.parent = this;
+            this.right.setParent(this);
         }
     }
 
@@ -45,29 +43,111 @@ public class Redblack {
      * @param value The value of the inserted node
      * @param parent The parent of the inserted node
      */
-    private Redblack(int value, Redblack parent) {
-        left = null;
-        right = null;
+    private RedBlackNode(int value, RedBlackNode parent) {
         this.parent = parent;
         this.value = value;
         red = true;
         height = 1;
     }
+    
+        /**
+     * @return the left
+     */
+    public RedBlackNode getLeft() {
+        return left;
+    }
+
+    /**
+     * @param left the left to set
+     */
+    public void setLeft(RedBlackNode left) {
+        this.left = left;
+    }
+
+    /**
+     * @return the right
+     */
+    public RedBlackNode getRight() {
+        return right;
+    }
+
+    /**
+     * @param right the right to set
+     */
+    public void setRight(RedBlackNode right) {
+        this.right = right;
+    }
+
+    /**
+     * @return the parent
+     */
+    public RedBlackNode getParent() {
+        return parent;
+    }
+
+    /**
+     * @param parent the parent to set
+     */
+    public void setParent(RedBlackNode parent) {
+        this.parent = parent;
+    }
+
+    /**
+     * @return the value
+     */
+    public int getValue() {
+        return value;
+    }
+
+    /**
+     * @param value the value to set
+     */
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    /**
+     * @return the height
+     */
+    public int getHeight() {
+        return height;
+    }
+
+    /**
+     * @param height the height to set
+     */
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    /**
+     * @return the red
+     */
+    public boolean isRed() {
+        return red;
+    }
+
+    /**
+     * @param red the red to set
+     */
+    public void setRed(boolean red) {
+        this.red = red;
+    }
 
     //Auxiliary tree functions
     public int leftHeight() {
-        if (left == null) {
+        if (getLeft() == null) {
             return 0;
         } else {
-            return left.height();
+            return getLeft().height();
         }
     }
 
     public int rightHeight() {
-        if (right == null) {
+        if (getRight() == null) {
             return 0;
         } else {
-            return right.height();
+            return getRight().height();
         }
     }
 
@@ -76,49 +156,49 @@ public class Redblack {
     }
 
     public void updateLeft() {
-        if (parent == null) {
-            red = false;
+        if (getParent() == null) {
+            setRed(false);
         } else {
-            if (this == parent.left) {
-                if (parent.right == null || !parent.right.red) {
-                    Redblack b = new Redblack(right, parent.right, this, parent.value, true);
-                    red = false;
-                    right = b;
-                    if (parent.parent != null) {
-                        if (parent.parent.left == parent) {
-                            parent.parent.left = this;
+            if (this == getParent().getLeft()) {
+                if (getParent().getRight() == null || !getParent().getRight().isRed()) {
+                    RedBlackNode b = new RedBlackNode(getRight(), getParent().getRight(), this, getParent().getValue(), true);
+                    setRed(false);
+                    setRight(b);
+                    if (getParent().getParent() != null) {
+                        if (getParent().getParent().getLeft() == getParent()) {
+                            getParent().getParent().setLeft(this);
                         } else {
-                            parent.parent.right = this;
+                            getParent().getParent().setRight(this);
                         }
                     }
-                    parent = parent.parent;
+                    setParent(getParent().getParent());
                 } else {
-                    red = false;
-                    parent.right.red = false;
-                    if (parent.parent == null) {
-                        parent.red = false;
-                    } else if (parent.parent.left == parent) {
-                        parent.parent.updateLeft();
+                    setRed(false);
+                    getParent().getRight().setRed(false);
+                    if (getParent().getParent() == null) {
+                        getParent().setRed(false);
+                    } else if (getParent().getParent().getLeft() == getParent()) {
+                        getParent().getParent().updateLeft();
                     } else {
-                        parent.parent.updateRight();
+                        getParent().getParent().updateRight();
                     }
                 }
             } else {
-                if (parent.left == null || !parent.left.red) {
-                    Redblack b = new Redblack(parent.left, left.left, parent, parent.value, true);
-                    parent.value = left.value;
-                    left = left.right;
-                    left.parent = this;
-                    parent.left = b;
+                if (getParent().getLeft() == null || !getParent().getLeft().isRed()) {
+                    RedBlackNode b = new RedBlackNode(getParent().getLeft(), getLeft().getLeft(), getParent(), getParent().getValue(), true);
+                    getParent().setValue(getLeft().getValue());
+                    setLeft(getLeft().getRight());
+                    getLeft().setParent(this);
+                    getParent().setLeft(b);
                 } else {
-                    red = false;
-                    parent.left.red = false;
-                    if (parent.parent == null) {
-                        parent.red = false;
-                    } else if (parent.parent.left == parent) {
-                        parent.parent.updateLeft();
+                    setRed(false);
+                    getParent().getLeft().setRed(false);
+                    if (getParent().getParent() == null) {
+                        getParent().setRed(false);
+                    } else if (getParent().getParent().getLeft() == getParent()) {
+                        getParent().getParent().updateLeft();
                     } else {
-                        parent.parent.updateRight();
+                        getParent().getParent().updateRight();
                     }
                 }
             }
@@ -126,50 +206,50 @@ public class Redblack {
     }
 
     public void updateRight() {
-        if (parent == null) {
-            red = false;
+        if (getParent() == null) {
+            setRed(false);
         } else {
-            if (this == parent.left) {
-                if (parent.right == null || !parent.right.red) {
-                    Redblack b = new Redblack(right.right, parent.right, parent, parent.value, true);
-                    parent.value = right.value;
-                    right = right.left;
-                    right.parent = this;
-                    parent.right = b;
+            if (this == getParent().getLeft()) {
+                if (getParent().getRight() == null || !getParent().getRight().isRed()) {
+                    RedBlackNode b = new RedBlackNode(getRight().getRight(), getParent().getRight(), getParent(), getParent().getValue(), true);
+                    getParent().setValue(getRight().getValue());
+                    setRight(getRight().getLeft());
+                    getRight().setParent(this);
+                    getParent().setRight(b);
                 } else {
-                    red = false;
-                    parent.right.red = false;
-                    if (parent.parent == null) {
-                        parent.red = false;
-                    } else if (parent.parent.left == parent) {
-                        parent.parent.updateLeft();
+                    setRed(false);
+                    getParent().getRight().setRed(false);
+                    if (getParent().getParent() == null) {
+                        getParent().setRed(false);
+                    } else if (getParent().getParent().getLeft() == getParent()) {
+                        getParent().getParent().updateLeft();
                     } else {
-                        parent.parent.updateRight();
+                        getParent().getParent().updateRight();
                     }
                 }
             } else {
-                if (parent.left == null || !parent.left.red) {
-                    Redblack b = new Redblack(left, parent.left, this, parent.value, true);
-                    red = false;
-                    left = b;
-                    if (parent.parent != null) {
-                        if (parent.parent.left == parent) {
-                            parent.parent.left = this;
+                if (getParent().getLeft() == null || !getParent().getLeft().isRed()) {
+                    RedBlackNode b = new RedBlackNode(getLeft(), getParent().getLeft(), this, getParent().getValue(), true);
+                    setRed(false);
+                    setLeft(b);
+                    if (getParent().getParent() != null) {
+                        if (getParent().getParent().getLeft() == getParent()) {
+                            getParent().getParent().setLeft(this);
                         } else {
-                            parent.parent.right = this;
+                            getParent().getParent().setRight(this);
                         }
                     }
-                    parent = parent.parent;
+                    setParent(getParent().getParent());
                 } else {
-                    red = false;
-                    parent.left.red = false;
-                    parent.red = true;
-                    if (parent.parent == null) {
-                        parent.red = false;
-                    } else if (parent.parent.left == parent) {
-                        parent.parent.updateLeft();
+                    setRed(false);
+                    getParent().getLeft().setRed(false);
+                    getParent().setRed(true);
+                    if (getParent().getParent() == null) {
+                        getParent().setRed(false);
+                    } else if (getParent().getParent().getLeft() == getParent()) {
+                        getParent().getParent().updateLeft();
                     } else {
-                        parent.parent.updateRight();
+                        getParent().getParent().updateRight();
                     }
                 }
             }
@@ -177,51 +257,49 @@ public class Redblack {
     }
 
     //Main public functions
-    public void insert(int a) {
-        if (a <= value) {
-            if (left == null) {
-                left = new Redblack(a, this);
-                if (red) {
+    @Override
+    public void insert(Integer a) {
+        if (a <= getValue()) {
+            if (getLeft() == null) {
+                setLeft(new RedBlackNode(a, this));
+                if (isRed()) {
                     updateLeft();
                 }
             } else {
-                left.insert(a);
+                getLeft().insert(a);
             }
         } else {
-            if (right == null) {
-                right = new Redblack(a, this);
-                if (red) {
+            if (getRight() == null) {
+                setRight(new RedBlackNode(a, this));
+                if (isRed()) {
                     updateRight();
                 }
             } else {
-                right.insert(a);
+                getRight().insert(a);
             }
         }
     }
 
-    public boolean search(int a) {
-        if (a == value) {
-            return true;
-        } else if (a < value) {
-            if (left == null) {
-                return false;
-            } else {
-                return left.search(a);
-            }
-        } else {
-            if (right == null) {
-                return false;
-            } else {
-                return right.search(a);
-            }
+    @Override
+    public Integer search(Integer a) {
+        switch (a.compareTo(getValue())) {
+            case 0:
+                return getValue();
+            case -1:
+                return getLeft() == null ? null : getLeft().search(a);
+            case 1:
+                return getRight() == null ? null : getLeft().search(a);
+            default:
+                return null;
         }
     }
 
     //After this are the printing functions
+    @Override
     public void print() {
-        int height = height();
-        String[] output = new String[height];
-        for (int i = 0; i < height; i++) {
+        int h = height();
+        String[] output = new String[h];
+        for (int i = 0; i < h; i++) {
             output[i] = new String();
         }
         fill(output, 0);
@@ -231,18 +309,18 @@ public class Redblack {
     }
 
     public void fill(String[] output, int stage) {
-        if (left != null) {
-            left.fill(output, stage + 1);
+        if (getLeft() != null) {
+            getLeft().fill(output, stage + 1);
         } else if (stage + 1 < output.length) {
             output[stage + 1] += repeatNTimes("   ", (int) Math.pow(2, output.length - stage + 1));
         }
-        if (right != null) {
-            right.fill(output, stage + 1);
+        if (getRight() != null) {
+            getRight().fill(output, stage + 1);
         } else if (stage + 1 < output.length) {
             output[stage + 1] += repeatNTimes("   ", (int) Math.pow(2, output.length - stage + 1));
         }
         output[stage] += repeatNTimes("   ", (int) Math.pow(2, output.length - stage))
-                + String.valueOf(value)
+                + String.valueOf(getValue())
                 + repeatNTimes("   ", (int) Math.pow(2, output.length - stage));
     }
 
@@ -255,7 +333,7 @@ public class Redblack {
     }
 
     public static void main(String[] args) {
-        Redblack test = new Redblack(15);
+        RedBlackNode test = new RedBlackNode(15);
         test.insert(5);
         test.insert(25);
         test.insert(30);
@@ -264,23 +342,28 @@ public class Redblack {
         test.insert(50);
         test.insert(4);
         test.insert(3);
-        Redblack[] liste = new Redblack[9];
+        RedBlackNode[] liste = new RedBlackNode[9];
         liste[0] = test;
-        liste[1] = test.left;
-        liste[2] = test.left.left;
-        liste[3] = test.left.right;
-        liste[4] = test.right;
-        liste[5] = test.right.left;
-        liste[6] = test.right.right;
-        liste[7] = test.right.right.left;
-        liste[8] = test.right.right.right;
-        for (Redblack node : liste) {
-            System.out.println(node.left != null);
-            System.out.println(node.right != null);
-            System.out.println(node.value);
-            System.out.println(node.red ? "red" : "black");
+        liste[1] = test.getLeft();
+        liste[2] = test.getLeft().getLeft();
+        liste[3] = test.getLeft().getRight();
+        liste[4] = test.getRight();
+        liste[5] = test.getRight().getLeft();
+        liste[6] = test.getRight().getRight();
+        liste[7] = test.getRight().getRight().getLeft();
+        liste[8] = test.getRight().getRight().getRight();
+        for (RedBlackNode node : liste) {
+            System.out.println(node.getLeft() != null);
+            System.out.println(node.getRight() != null);
+            System.out.println(node.getValue());
+            System.out.println(node.isRed() ? "red" : "black");
             System.out.println();
         }
         test.print();
+    }
+
+    @Override
+    public boolean remove(Integer t) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

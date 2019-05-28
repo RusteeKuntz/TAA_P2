@@ -88,11 +88,11 @@ public class AvlNode implements Tree<Integer> {
 
     //Auxiliary tree functions
     private int leftHeight() {
-        return left == null ? 0 : left.getHeight();
+        return getLeft() == null ? 0 : getLeft().getHeight();
     }
 
     private int rightHeight() {
-        return right == null ? 0 : right.getHeight();
+        return getRight() == null ? 0 : getRight().getHeight();
     }
 
     public void updateHeightRecurs() {
@@ -110,19 +110,19 @@ public class AvlNode implements Tree<Integer> {
     @Override
     public void insert(Integer a) {
         boolean inserted = false;
-        if (a.compareTo(value) < 1) {
-            if (left == null) {
-                left = new AvlNode(a, this);
+        if (a.compareTo(getValue()) < 1) {
+            if (getLeft() == null) {
+                setLeft(new AvlNode(a, this));
                 inserted = true;
             } else {
-                left.insert(a);
+                getLeft().insert(a);
             }
         } else {
-            if (right == null) {
-                right = new AvlNode(a, this);
+            if (getRight() == null) {
+                setRight(new AvlNode(a, this));
                 inserted = true;
             } else {
-                right.insert(a);
+                getRight().insert(a);
             }
         }
         if (inserted) {
@@ -133,56 +133,56 @@ public class AvlNode implements Tree<Integer> {
 
     @Override
     public Integer search(Integer a) {
-        switch (a.compareTo(value)) {
+        switch (a.compareTo(getValue())) {
             case 0:
-                return value;
+                return getValue();
             case -1:
-                return left == null ? null : left.search(a);
+                return getLeft() == null ? null : getLeft().search(a);
             case 1:
-                return right == null ? null : left.search(a);
+                return getRight() == null ? null : getLeft().search(a);
             default:
                 return null;
         }
     }
 
     public void balance() {
-        if (left == null) {
+        if (getLeft() == null) {
             if (rightHeight() <= 1) {
-                if (parent != null) {
-                    parent.balance();
+                if (getParent() != null) {
+                    getParent().balance();
                 }
             } else {
-                if (right.getLeft() == null || right.rightHeight() >= right.leftHeight()) {
+                if (getRight().getLeft() == null || getRight().rightHeight() >= getRight().leftHeight()) {
                     rotateRightLeft();
                 } else {
                     rotateRightRight();
                 }
             }
-        } else if (right == null) {
+        } else if (getRight() == null) {
             if (leftHeight() <= 1) {
-                if (parent != null) {
-                    parent.balance();
+                if (getParent() != null) {
+                    getParent().balance();
                 }
             } else {
-                if (left.getRight() == null || left.leftHeight() >= left.rightHeight()) {
+                if (getLeft().getRight() == null || getLeft().leftHeight() >= getLeft().rightHeight()) {
                     rotateLeftRight();
                 } else {
                     rotateLeftLeft();
                 }
             }
         } else if ((Math.abs(leftHeight() - rightHeight()) <= 1)) {
-            if (parent != null) {
-                parent.balance();
+            if (getParent() != null) {
+                getParent().balance();
             }
         } else {
             if (leftHeight() > rightHeight()) {
-                if (left.leftHeight() >= left.rightHeight()) {
+                if (getLeft().leftHeight() >= getLeft().rightHeight()) {
                     rotateLeftRight();
                 } else {
                     rotateLeftLeft();
                 }
             } else {
-                if (right.rightHeight() >= right.leftHeight()) {
+                if (getRight().rightHeight() >= getRight().leftHeight()) {
                     rotateRightLeft();
                 } else {
                     rotateRightRight();
@@ -193,46 +193,46 @@ public class AvlNode implements Tree<Integer> {
 
     //Rotations
     public void rotateLeftRight() {
-        AvlNode x = new AvlNode(left.getRight(), right, this, value);
-        this.value = left.getValue();
-        this.left = left.getLeft();
-        this.left.setParent(this);
-        this.right = x;
+        AvlNode x = new AvlNode(getLeft().getRight(), getRight(), this, getValue());
+        this.setValue(getLeft().getValue());
+        this.setLeft(getLeft().getLeft());
+        this.getLeft().setParent(this);
+        this.setRight(x);
         updateHeightRecurs();
     }
 
     public void rotateRightLeft() {
-        AvlNode x = new AvlNode(left, right.getLeft(), this, value);
-        this.value = right.getValue();
-        this.right = right.getRight();
-        this.right.setParent(this);
-        this.left = x;
+        AvlNode x = new AvlNode(getLeft(), getRight().getLeft(), this, getValue());
+        this.setValue(getRight().getValue());
+        this.setRight(getRight().getRight());
+        this.getRight().setParent(this);
+        this.setLeft(x);
         updateHeightRecurs();
     }
 
     public void rotateLeftLeft() {
-        AvlNode x = new AvlNode(left.getRight().getRight(), right, this, value);
-        AvlNode y = new AvlNode(left.getLeft(), left.getRight().getLeft(), this, left.getValue());
-        this.value = left.getRight().getValue();
-        this.left = y;
-        this.right = x;
+        AvlNode x = new AvlNode(getLeft().getRight().getRight(), getRight(), this, getValue());
+        AvlNode y = new AvlNode(getLeft().getLeft(), getLeft().getRight().getLeft(), this, getLeft().getValue());
+        this.setValue(getLeft().getRight().getValue());
+        this.setLeft(y);
+        this.setRight(x);
         updateHeightRecurs();
     }
 
     public void rotateRightRight() {
-        AvlNode x = new AvlNode(left, right.getLeft().getLeft(), this, value);
-        AvlNode y = new AvlNode(right.getLeft().getRight(), right.getRight(), this, right.getValue());
-        this.value = right.getLeft().getValue();
-        this.left = x;
-        this.right = y;
+        AvlNode x = new AvlNode(getLeft(), getRight().getLeft().getLeft(), this, getValue());
+        AvlNode y = new AvlNode(getRight().getLeft().getRight(), getRight().getRight(), this, getRight().getValue());
+        this.setValue(getRight().getLeft().getValue());
+        this.setLeft(x);
+        this.setRight(y);
         updateHeightRecurs();
     }
 
     //After this are the printing functions
     @Override
     public void print() {
-        String[] output = new String[height];
-        for (int i = 0; i < height; i++) {
+        String[] output = new String[getHeight()];
+        for (int i = 0; i < getHeight(); i++) {
             output[i] = new String();
         }
         fill(output, 0);
@@ -242,18 +242,18 @@ public class AvlNode implements Tree<Integer> {
     }
 
     public void fill(String[] output, int stage) {
-        if (left != null) {
-            left.fill(output, stage + 1);
+        if (getLeft() != null) {
+            getLeft().fill(output, stage + 1);
         } else if (stage + 1 < output.length) {
             output[stage + 1] += repeatNTimes("   ", (int) Math.pow(2, output.length - stage + 1));
         }
-        if (right != null) {
-            right.fill(output, stage + 1);
+        if (getRight() != null) {
+            getRight().fill(output, stage + 1);
         } else if (stage + 1 < output.length) {
             output[stage + 1] += repeatNTimes("   ", (int) Math.pow(2, output.length - stage + 1));
         }
         output[stage] += repeatNTimes("   ", (int) Math.pow(2, output.length - stage))
-                + String.valueOf(value)
+                + String.valueOf(getValue())
                 + repeatNTimes("   ", (int) Math.pow(2, output.length - stage));
     }
 
